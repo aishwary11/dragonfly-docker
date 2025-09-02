@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "plugins": [
+    "prettier-plugin-packagejson",
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
+  "importOrder": [
+    "^node:.*",
+    "^@?\\w",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": [
+    "typescript"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "overrides": [
+    {
+      "files": [
+        "*.json",
+        "package.json"
+      ],
+      "options": {
+        "printWidth": 120
+      }
+    }
+  ]
+}

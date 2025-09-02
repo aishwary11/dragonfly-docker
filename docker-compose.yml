@@ -1,0 +1,38 @@
+services:
+  dragonfly:
+    image: ghcr.io/dragonflydb/dragonfly:latest
+    command: ["--logtostderr", "1", "--requirepass", "${REDIS_PASSWORD}", "--proactor_threads", "4"]
+    ports:
+      - "6379:6379"
+    environment:
+      - DFLY_maxmemory=1gb
+    volumes:
+      - dragonfly-data:/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    init: true
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+      - REDIS_URL=redis://default:${REDIS_PASSWORD}@dragonfly:6379/0
+    depends_on:
+      - dragonfly
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:'+process.env.PORT+'/health').then(r=>{if(r.ok)process.exit(0);process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dragonfly-data:
