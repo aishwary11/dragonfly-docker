@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🐉 Dragonfly Node
 
 **High-performance Redis-compatible cache API powered by Dragonfly DB**
@@ -10,8 +8,6 @@
 [![Dragonfly](https://img.shields.io/badge/Dragonfly-Latest-FF6B35?style=flat&logo=redis&logoColor=white)](https://dragonflydb.io/)
 
 *A production-ready Express.js API with optimized Docker containerization for blazing-fast key-value operations*
-
-</div>
 
 ---
 
@@ -344,10 +340,6 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 ---
 
-<div align="center">
-
 **Made with ❤️ and ⚡ by the Dragonfly Node team**
 
 [Report Bug](../../issues) · [Request Feature](../../issues) · [Documentation](../../wiki)
-
-</div>
