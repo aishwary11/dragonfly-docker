@@ -1,14 +1,25 @@
+version: '3.8'
+
 services:
   dragonfly:
-    image: ghcr.io/dragonflydb/dragonfly:latest
-    command: ["--logtostderr", "1", "--requirepass", "${REDIS_PASSWORD}", "--proactor_threads", "4"]
-    ports:
-      - "6379:6379"
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    command: ["--logtostderr", "1", "--proactor_threads", "4"]
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     environment:
       - DFLY_maxmemory=1gb
+    ports:
+      - "6379:6379"
     volumes:
       - dragonfly-data:/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "redis-cli -h 127.0.0.1 -p 6379 ping | grep PONG || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   api:
     build:
@@ -21,7 +32,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${PORT:-3000}
-      - REDIS_URL=redis://default:${REDIS_PASSWORD}@dragonfly:6379/0
+      - REDIS_HOST=dragonfly
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_USERNAME=${REDIS_USERNAME}
     depends_on:
       - dragonfly
     ports:
